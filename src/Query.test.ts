@@ -1,7 +1,11 @@
 import { Query } from "./Query";
 
 describe("Query", () => {
-  jest.useFakeTimers();
+  let originalSetTimeout: (callback: (...args: any[]) => void, ms: number, ...args: any[]) => {};
+  beforeEach(() => {
+    originalSetTimeout = setTimeout;
+    jest.useFakeTimers();
+  });
 
   describe("run", () => {
     it("should validate the url", () => {
@@ -22,7 +26,9 @@ describe("Query", () => {
       jest.runOnlyPendingTimers();
 
       // Assert
-      expect(urlValidator.validate).toHaveBeenCalled();
+      originalSetTimeout(() => {
+        expect(urlValidator.validate).toHaveBeenCalled();
+      }, 0);
     });
 
     it("should log an error when url is not valid", () => {
@@ -49,7 +55,9 @@ describe("Query", () => {
       jest.runOnlyPendingTimers();
 
       // Assert
-      expect(logging.error).toHaveBeenCalled();
+      originalSetTimeout(() => {
+        expect(logging.error).toHaveBeenCalled();
+      }, 0);
     });
 
     it("should use http handler to query the address when url is valid", () => {
@@ -82,9 +90,11 @@ describe("Query", () => {
       jest.runOnlyPendingTimers();
 
       // Assert
-      expect(urlValidator.validate).toHaveBeenCalledWith(address);
-      expect(logging.success).toHaveBeenCalledWith(httpHandlerResult);
-      expect(httpHandler.query).toHaveBeenCalledWith(address);
+      originalSetTimeout(() => {
+        expect(urlValidator.validate).toHaveBeenCalledWith(address);
+        expect(logging.success).toHaveBeenCalledWith(httpHandlerResult);
+        expect(httpHandler.query).toHaveBeenCalledWith(address);
+      }, 0);
     });
   });
 });
