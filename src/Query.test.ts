@@ -2,8 +2,15 @@ import { Query } from "./Query";
 
 describe("Query", () => {
   let originalSetTimeout: (callback: (...args: any[]) => void, ms: number, ...args: any[]) => void;
-  originalSetTimeout = setTimeout;
-  jest.useFakeTimers();
+
+  beforeEach(() => {
+    originalSetTimeout = setTimeout;
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
 
   describe("run", () => {
     it("should validate the url", (done) => {
