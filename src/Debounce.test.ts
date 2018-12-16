@@ -1,7 +1,13 @@
 import { Debounce } from "./Debounce";
 
 describe("Debounce", () => {
-  jest.useFakeTimers();
+  beforeEach(() => {
+    jest.useFakeTimers();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
 
   describe("doAfterDelay", () => {
     it("should execute the provided callback after the timeout period", () => {

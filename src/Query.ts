@@ -26,7 +26,7 @@ export class Query {
     if (!isValidUrl) {
       const errorMessage = "invalid url provided";
       this.logging.error(errorMessage);
-      return Promise.resolve("");
+      return Promise.resolve(errorMessage);
     }
 
     const result = await this.httpHandler.query(address);
