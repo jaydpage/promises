@@ -1,14 +1,12 @@
 import { Query } from "./Query";
 
 describe("Query", () => {
-  let originalSetTimeout: (callback: (...args: any[]) => void, ms: number, ...args: any[]) => {};
-  beforeEach(() => {
-    originalSetTimeout = setTimeout;
-    jest.useFakeTimers();
-  });
+  let originalSetTimeout: (callback: (...args: any[]) => void, ms: number, ...args: any[]) => void;
+  originalSetTimeout = setTimeout;
+  jest.useFakeTimers();
 
   describe("run", () => {
-    it("should validate the url", () => {
+    it("should validate the url", (done) => {
       // Arrange
       const validationResult = false;
       const address = "";
@@ -23,15 +21,16 @@ describe("Query", () => {
 
       // Act
       query.url(address);
-      jest.runOnlyPendingTimers();
+      jest.runAllTimers();
 
       // Assert
       originalSetTimeout(() => {
         expect(urlValidator.validate).toHaveBeenCalled();
+        done();
       }, 0);
     });
 
-    it("should log an error when url is not valid", () => {
+    it("should log an error when url is not valid", (done) => {
       // Arrange
       const validationResult = false;
       const address = "";
@@ -52,15 +51,16 @@ describe("Query", () => {
 
       // Act
       query.url(address);
-      jest.runOnlyPendingTimers();
+      jest.runAllTimers();
 
       // Assert
       originalSetTimeout(() => {
         expect(logging.error).toHaveBeenCalled();
+        done();
       }, 0);
     });
 
-    it("should use http handler to query the address when url is valid", () => {
+    it("should use http handler to query the address when url is valid", (done) => {
       // Arrange
       const validationResult = true;
       const address = "someUrlAddress";
@@ -87,13 +87,14 @@ describe("Query", () => {
 
       // Act
       query.url(address);
-      jest.runOnlyPendingTimers();
+      jest.runAllTimers();
 
       // Assert
       originalSetTimeout(() => {
         expect(urlValidator.validate).toHaveBeenCalledWith(address);
         expect(logging.success).toHaveBeenCalledWith(httpHandlerResult);
         expect(httpHandler.query).toHaveBeenCalledWith(address);
+        done();
       }, 0);
     });
   });
