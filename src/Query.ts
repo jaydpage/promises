@@ -26,6 +26,10 @@ export class Query {
     if (!isValidUrl) {
       const errorMessage = "invalid url provided";
       this.logging.error(errorMessage);
+      // TODO I don't think it is a good idea to reject here as you are not bubbling the promise up to anything
+      //      that can do a .catch on it. In the later versions of node an uncaught promise is going to result in
+      //      process terminating. I think a Promise.resolve() will be fine here as the real thin you are after is 
+      //      the logging and that has already happened at this point.
       return Promise.reject();
     }
 
