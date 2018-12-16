@@ -1,17 +1,19 @@
 import { Debounce } from "./Debounce";
 import { UrlValidator } from "./UrlValidator";
-import { promises } from "fs";
 import { Logging } from "./Logging";
+import { HttpHandler } from "./HttpHandler";
 
 export class Query {
   private debounce: Debounce;
   private urlValidator: UrlValidator;
   private logging: Logging;
+  private httpHandler: HttpHandler;
 
   constructor() {
     this.debounce = new Debounce();
     this.urlValidator = new UrlValidator();
     this.logging = new Logging();
+    this.httpHandler = new HttpHandler();
   }
 
   public url(address: string) {
@@ -19,15 +21,15 @@ export class Query {
   }
 
   private async queryUrlAsync(address: string): Promise<string> {
-    console.log(">>>>>>>>>>>>>>>>>queryUrlAsync");
     const isValidUrl = await this.urlValidator.validate(address);
+
     if (!isValidUrl) {
-      console.log(">>>>>>>>>>>>>>>>>invalidUrl");
       const errorMessage = "invalid url provided";
       this.logging.error(errorMessage);
       return Promise.reject();
     }
-    const result = "result from query";
+
+    const result = await this.httpHandler.query(address);
     this.logging.success(result);
     return Promise.resolve(result);
   }

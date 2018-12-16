@@ -8,9 +8,11 @@ describe("Debounce", () => {
       // Arrange
       const debounce = new Debounce();
       const callback = jest.fn();
+
       // Act
       debounce.doAfterDelay(callback);
       jest.runOnlyPendingTimers();
+
       // Assert
       expect(callback).toHaveBeenCalledTimes(1);
     });
@@ -20,6 +22,7 @@ describe("Debounce", () => {
       const callback1 = jest.fn();
       const callback2 = jest.fn();
       const callback3 = jest.fn();
+
       // Act
       debounce.doAfterDelay(callback1);
       jest.advanceTimersByTime(400);
